@@ -27,6 +27,8 @@ public class ZndblRpcSrpringProvider implements ApplicationContextAware, Initial
 
     private static final Logger LOG = LoggerFactory.getLogger(ZndblRpcSrpringProvider.class);
 
+    private String applicationName;
+
     private String registryAddress;
 
     private String serviceAddress;
@@ -71,6 +73,14 @@ public class ZndblRpcSrpringProvider implements ApplicationContextAware, Initial
         this.serviceRegistryClass = serviceRegistryClass;
     }
 
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
+    }
+
     // first process
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
@@ -81,13 +91,14 @@ public class ZndblRpcSrpringProvider implements ApplicationContextAware, Initial
 
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             Object value = entry.getValue();
-            int length = value.getClass().getInterfaces().length;
+            Class[] csArray = value.getClass().getInterfaces();
+            int length = csArray.length;
             if (length == 0) {
                 throw new ZndblRpcException("ZndblRpcService must have interface");
             }
-            ZndblRpcService zndblRpcService = value.getClass().getAnnotation(ZndblRpcService.class);
-            String group = zndblRpcService.group();
-            String interfaceName = zndblRpcService.interfaceName();
+            Class cs = csArray[0];
+            String interfaceName =  cs.getName();
+            String group = applicationName;
             try {
                 if (serviceRegistry == null) {
                     serviceRegistry = serviceRegistryClass.newInstance();

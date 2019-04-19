@@ -19,8 +19,4 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface ZndblRpcService {
-
-    String interfaceName() default "";
-
-    String group() default "";
 }

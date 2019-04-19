@@ -21,6 +21,9 @@ public class ZndblRpcProviderConfig {
 
     private static final Logger LOG = LoggerFactory.getLogger(ZndblRpcProviderConfig.class);
 
+    @Value("${zndbl-rpc.application.name}")
+    private String applicationName;
+
     @Value("${zndbl-rpc.remoting.port}")
     private int port;
 
@@ -33,6 +36,7 @@ public class ZndblRpcProviderConfig {
         zndblRpcSrpringProvider.setRegistryAddress(registryAddress);
         String ip = IpUtil.getIp();
         zndblRpcSrpringProvider.setServiceAddress(ip + ':' + port);
+        zndblRpcSrpringProvider.setApplicationName(applicationName);
         zndblRpcSrpringProvider.setServiceRegistryClass(ZkServiceRegistry.class);
         zndblRpcSrpringProvider.setServerClass(NettyServer.class);
         return zndblRpcSrpringProvider;
