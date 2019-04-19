@@ -97,7 +97,7 @@ public class ZndblRpcSrpringProvider implements ApplicationContextAware, Initial
                 throw new ZndblRpcException("ZndblRpcService must have interface");
             }
             Class cs = csArray[0];
-            String interfaceName =  cs.getName();
+            String interfaceName = cs.getName();
             String group = applicationName;
             try {
                 if (serviceRegistry == null) {
