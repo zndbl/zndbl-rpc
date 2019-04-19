@@ -3,7 +3,7 @@ package com.zndbl.rpc.service;
 import org.springframework.stereotype.Service;
 
 import com.zndbl.rpc.dto.StudentDto;
-import com.zndbl.rpc.remoting.provider.annotation.ZndblRpcService;
+import com.zndbl.rpc.provider.annotation.ZndblRpcService;
 
 /**
  * @author zndbl
