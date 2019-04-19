@@ -9,7 +9,7 @@ import com.zndbl.rpc.provider.annotation.ZndblRpcService;
  * @author zndbl
  * @Date 2019/4/3
  */
-@ZndblRpcService(group = "")
+@ZndblRpcService
 @Service
 public class StudentServiceImpl implements StudentService {
 
