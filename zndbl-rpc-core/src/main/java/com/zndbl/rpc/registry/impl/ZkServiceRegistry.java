@@ -21,7 +21,7 @@ import com.zndbl.rpc.registry.ServiceRegistry;
  * @see [相关类/方法]（可选）
  * @since [产品/模块版本] （必须）
  */
-public class ServiceRegistryImpl implements ServiceRegistry, Watcher {
+public class ZkServiceRegistry implements ServiceRegistry, Watcher {
 
     private static final Logger LOG = LoggerFactory.getLogger(ServiceRegistry.class);
     private static CountDownLatch latch = new CountDownLatch(1);
@@ -29,9 +29,10 @@ public class ServiceRegistryImpl implements ServiceRegistry, Watcher {
     private static final String REGISTRY_PATH = "/zndbl";
     private ZooKeeper zk;
 
-    public ServiceRegistryImpl() {};
+    public ZkServiceRegistry() {};
 
-    public ServiceRegistryImpl(String zkServers) {
+    @Override
+    public void connectZookeeper(String zkServers) {
         try {
             zk = new ZooKeeper(zkServers, SESSION_TIMEOUT, this);
             latch.await();
@@ -46,18 +47,18 @@ public class ServiceRegistryImpl implements ServiceRegistry, Watcher {
         try {
             String registryPath = REGISTRY_PATH;
             if (zk.exists(registryPath, false) == null) {
-                zk.create(registryPath, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+                zk.create(registryPath, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
                 LOG.debug("create registry node:{}", registryPath);
             }
 
             String applicationPath = registryPath + "/" + applicationName;
             if (zk.exists(applicationPath, false) == null) {
-                zk.create(applicationPath, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+                zk.create(applicationPath, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
                 LOG.debug("create application node:{}", applicationPath);
             }
 
             String servicePath = applicationPath + "/" + serviceName;
-            String serviceNode = zk.create(servicePath, serviceAddress.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+            String serviceNode = zk.create(servicePath, serviceAddress.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
             LOG.info("create service node:{} => {}", serviceNode, serviceAddress);
         } catch (Exception e) {
             LOG.error("create node failure", e);

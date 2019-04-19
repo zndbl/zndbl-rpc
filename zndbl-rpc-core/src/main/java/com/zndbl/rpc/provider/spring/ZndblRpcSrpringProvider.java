@@ -2,13 +2,17 @@ package com.zndbl.rpc.provider.spring;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-import com.zndbl.rpc.util.ZndblRpcException;
+import com.zndbl.rpc.net.Server;
 import com.zndbl.rpc.provider.annotation.ZndblRpcService;
+import com.zndbl.rpc.registry.ServiceRegistry;
+import com.zndbl.rpc.util.ZndblRpcException;
 
 /**
  * 〈一句话功能简述〉
@@ -21,28 +25,26 @@ import com.zndbl.rpc.provider.annotation.ZndblRpcService;
  */
 public class ZndblRpcSrpringProvider implements ApplicationContextAware, InitializingBean, DisposableBean {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ZndblRpcSrpringProvider.class);
+
     private String registryAddress;
-
-    private String applicationName;
-
-    private String serviceName;
 
     private String serviceAddress;
 
-    public String getApplicationName() {
-        return applicationName;
+    private Class<? extends ServiceRegistry> serviceRegistryClass;
+
+    private ServiceRegistry serviceRegistry;
+
+    private Class<? extends Server> serverClass;
+
+    private Server server;
+
+    public Class<? extends Server> getServerClass() {
+        return serverClass;
     }
 
-    public void setApplicationName(String applicationName) {
-        this.applicationName = applicationName;
-    }
-
-    public String getServiceName() {
-        return serviceName;
-    }
-
-    public void setServiceName(String serviceName) {
-        this.serviceName = serviceName;
+    public void setServerClass(Class<? extends Server> serverClass) {
+        this.serverClass = serverClass;
     }
 
     public String getServiceAddress() {
@@ -61,6 +63,15 @@ public class ZndblRpcSrpringProvider implements ApplicationContextAware, Initial
         this.registryAddress = registryAddress;
     }
 
+    public Class<? extends ServiceRegistry> getServiceRegistryClass() {
+        return serviceRegistryClass;
+    }
+
+    public void setServiceRegistryClass(Class<? extends ServiceRegistry> serviceRegistryClass) {
+        this.serviceRegistryClass = serviceRegistryClass;
+    }
+
+    // first process
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
         Map<String, Object> map = applicationContext.getBeansWithAnnotation(ZndblRpcService.class);
@@ -76,12 +87,17 @@ public class ZndblRpcSrpringProvider implements ApplicationContextAware, Initial
             }
             ZndblRpcService zndblRpcService = value.getClass().getAnnotation(ZndblRpcService.class);
             String group = zndblRpcService.group();
-            String version = zndblRpcService.version();
             String interfaceName = zndblRpcService.interfaceName();
-
-
+            try {
+                if (serviceRegistry == null) {
+                    serviceRegistry = serviceRegistryClass.newInstance();
+                    serviceRegistry.connectZookeeper(registryAddress);
+                }
+                serviceRegistry.registry(group, interfaceName, serviceAddress);
+            } catch (Exception e) {
+                LOG.error("init serviceRegistry has throwable", e);
+            }
         }
-
     }
 
 
@@ -90,8 +106,13 @@ public class ZndblRpcSrpringProvider implements ApplicationContextAware, Initial
 
     }
 
+    // second process
     @Override
     public void afterPropertiesSet() throws Exception {
+        if (server == null) {
+            server = serverClass.newInstance();
+        }
+
 
     }
 }

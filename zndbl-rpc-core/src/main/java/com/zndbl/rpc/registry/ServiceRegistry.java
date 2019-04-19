@@ -11,6 +11,7 @@ package com.zndbl.rpc.registry;
  */
 public interface ServiceRegistry {
 
+    void connectZookeeper(String registryAddress);
     /**
      * 注册服务信息
      * @param applicationName 应用名称
