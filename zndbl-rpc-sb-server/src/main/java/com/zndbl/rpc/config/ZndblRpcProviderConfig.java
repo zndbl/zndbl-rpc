@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.zndbl.rpc.net.Server;
+import com.zndbl.rpc.net.impl.netty.NettyServer;
 import com.zndbl.rpc.provider.spring.ZndblRpcSrpringProvider;
 import com.zndbl.rpc.registry.impl.ZkServiceRegistry;
 import com.zndbl.rpc.util.IpUtil;
@@ -34,7 +34,7 @@ public class ZndblRpcProviderConfig {
         String ip = IpUtil.getIp();
         zndblRpcSrpringProvider.setServiceAddress(ip + ':' + port);
         zndblRpcSrpringProvider.setServiceRegistryClass(ZkServiceRegistry.class);
-        zndblRpcSrpringProvider.setServerClass(Server.class);
+        zndblRpcSrpringProvider.setServerClass(NettyServer.class);
         return zndblRpcSrpringProvider;
     }
 }
