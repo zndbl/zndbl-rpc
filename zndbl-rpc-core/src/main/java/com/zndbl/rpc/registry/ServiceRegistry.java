@@ -1,25 +1,21 @@
 package com.zndbl.rpc.registry;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
 /**
+ * 〈一句话功能简述〉
+ * 〈功能详细描述〉
  *
  * @author LANWENJIAN
- * @Date 2019/4/3
+ * @Date 2019/4/19
+ * @see [相关类/方法]（可选）
+ * @since [产品/模块版本] （必须）
  */
-public abstract class ServiceRegistry {
+public interface ServiceRegistry {
 
-    public abstract void start(Map<String, String> param);
-
-    public abstract void stop();
-
-    public abstract boolean registry(Set<String> keys, String value);
-
-    public abstract boolean remove(Set<String> keys, String value);
-
-    public abstract Map<String, TreeSet<String>> discovery(Set<String> keys);
-
-    public abstract TreeSet<String> discovery(String key);
+    /**
+     * 注册服务信息
+     * @param applicationName 应用名称
+     * @param serviceName 服务名称
+     * @param serviceAddress 服务地址
+     */
+    void registry(String applicationName, String serviceName, String serviceAddress);
 }
