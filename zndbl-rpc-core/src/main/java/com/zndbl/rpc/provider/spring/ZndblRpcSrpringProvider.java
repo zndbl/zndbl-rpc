@@ -128,11 +128,6 @@ public class ZndblRpcSrpringProvider implements ApplicationContextAware, Initial
     // second process
     @Override
     public void afterPropertiesSet() throws Exception {
-        if (server == null) {
-            server = serverClass.newInstance();
-        }
-        String[] strArray = serviceAddress.split(":");
-        String port = strArray[1];
         server.start(this);
     }
 
