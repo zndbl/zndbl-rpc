@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.zndbl.rpc.net.impl.netty.NettyServer;
+import com.zndbl.rpc.net.netty.NettyServer;
 import com.zndbl.rpc.provider.spring.ZndblRpcSrpringProvider;
 import com.zndbl.rpc.registry.impl.ZkServiceRegistry;
 import com.zndbl.rpc.util.IpUtil;

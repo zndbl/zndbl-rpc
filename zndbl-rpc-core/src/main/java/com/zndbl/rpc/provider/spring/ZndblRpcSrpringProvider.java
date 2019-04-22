@@ -1,5 +1,7 @@
 package com.zndbl.rpc.provider.spring;
 
+import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -9,9 +11,12 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-import com.zndbl.rpc.net.Server;
+import com.zndbl.rpc.net.common.ZndblRpcRequest;
+import com.zndbl.rpc.net.common.ZndblRpcResponse;
+import com.zndbl.rpc.net.netty.Server;
 import com.zndbl.rpc.provider.annotation.ZndblRpcService;
 import com.zndbl.rpc.registry.ServiceRegistry;
+import com.zndbl.rpc.util.ThrowableUtil;
 import com.zndbl.rpc.util.ZndblRpcException;
 
 /**
@@ -44,6 +49,8 @@ public class ZndblRpcSrpringProvider implements ApplicationContextAware, Initial
     public Class<? extends Server> getServerClass() {
         return serverClass;
     }
+
+    private Map<String, Object> serviceData = new HashMap<>();
 
     public void setServerClass(Class<? extends Server> serverClass) {
         this.serverClass = serverClass;
@@ -99,6 +106,7 @@ public class ZndblRpcSrpringProvider implements ApplicationContextAware, Initial
             Class cs = csArray[0];
             String interfaceName = cs.getName();
             String group = applicationName;
+            serviceData.put(interfaceName, value);
             try {
                 if (serviceRegistry == null) {
                     serviceRegistry = serviceRegistryClass.newInstance();
@@ -123,7 +131,41 @@ public class ZndblRpcSrpringProvider implements ApplicationContextAware, Initial
         if (server == null) {
             server = serverClass.newInstance();
         }
+        String[] strArray = serviceAddress.split(":");
+        String port = strArray[1];
+        server.start(this);
+    }
 
+    public ZndblRpcResponse invokeService(ZndblRpcRequest zndblRpcRequest) {
+        ZndblRpcResponse zndblRpcResponse = new ZndblRpcResponse();
+        zndblRpcResponse.setRequestId(zndblRpcRequest.getRequestId());
 
+        String serviceKey = zndblRpcRequest.getClassName();
+        Object serviceBean = serviceData.get(serviceKey);
+        if (serviceBean == null) {
+            zndblRpcResponse.setErrorMsg("The serviceKey["+ serviceKey +"] not found.");
+        }
+
+        if (System.currentTimeMillis() - zndblRpcRequest.getCreateMillisTime() > 3 * 60 * 1000) {
+            zndblRpcResponse.setErrorMsg("The timestamp difference between admin and executor exceeds the limit.");
+            return zndblRpcResponse;
+        }
+
+        try {
+            Class<?> serviceClass = serviceBean.getClass();
+            String methodName = zndblRpcRequest.getMethodName();
+            Class<?>[] parameterTypes = zndblRpcRequest.getParameterTypes();
+            Object[] parameters= zndblRpcRequest.getParameters();
+            Method method = serviceClass.getMethod(methodName, parameterTypes);
+            method.setAccessible(true);
+            Object result = method.invoke(serviceBean, parameters);
+
+            zndblRpcResponse.setResult(result);
+        } catch (Exception e) {
+            LOG.error("xxl-rpc provider invokeService error.", e);
+            zndblRpcResponse.setErrorMsg(ThrowableUtil.toString(e));
+        }
+
+        return zndblRpcResponse;
     }
 }

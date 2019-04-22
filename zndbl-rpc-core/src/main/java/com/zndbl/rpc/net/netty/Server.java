@@ -1,6 +1,6 @@
-package com.zndbl.rpc.net.impl.netty;
+package com.zndbl.rpc.net.netty;
 
-import com.zndbl.rpc.net.Server;
+import com.zndbl.rpc.provider.spring.ZndblRpcSrpringProvider;
 
 /**
  * 〈一句话功能简述〉
@@ -11,5 +11,7 @@ import com.zndbl.rpc.net.Server;
  * @see [相关类/方法]（可选）
  * @since [产品/模块版本] （必须）
  */
-public class NettyServer implements Server {
+public interface Server {
+
+    void start(ZndblRpcSrpringProvider zndblRpcSrpringProvider);
 }
