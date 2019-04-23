@@ -27,7 +27,7 @@ public class NettyDecoder extends ByteToMessageDecoder {
     }
 
     @Override
-    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> list) throws Exception {
+    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         if (in.readableBytes() < 4) {
             return;
         }
@@ -45,8 +45,6 @@ public class NettyDecoder extends ByteToMessageDecoder {
 
         Serializer serializer = new HessianSerializer();
         Object obj = serializer.deserialize(data, genericClass);
-
-
-
+        out.add(obj);
     }
 }
