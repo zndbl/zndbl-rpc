@@ -9,6 +9,7 @@ import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.ZooKeeper;
+import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,7 +79,7 @@ public class ZkServiceRegistry implements ServiceRegistry, Watcher {
     public Set<String> discovery(String key) {
         Set<String> set = new HashSet<>();
         try {
-            byte[] bytes = zk.getData(key, false, null);
+            byte[] bytes = zk.getData(key, true, new Stat());
             String str = new String(bytes);
             set.add(str);
         } catch (Exception e) {
