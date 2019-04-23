@@ -84,7 +84,7 @@ public class ZndblRpcSpringInvoker extends InstantiationAwareBeanPostProcessorAd
                 if (field.isAnnotationPresent(ZndblRpcRefrence.class)) {
                     Class iface = field.getType();
                     if (!iface.isInterface()) {
-                        throw new ZndblRpcException("xxl-rpc, reference(XxlRpcReference) must be interface.");
+                        throw new ZndblRpcException("zndbl-rpc, reference(ZndblRpcRefrence) must be interface.");
                     }
                     Object serviceProxy = getObject(iface);
                     field.setAccessible(true);

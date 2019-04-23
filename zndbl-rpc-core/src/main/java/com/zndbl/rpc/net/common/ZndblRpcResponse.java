@@ -44,7 +44,7 @@ public class ZndblRpcResponse implements Serializable {
 
     @Override
     public String toString() {
-        return "XxlRpcResponse{" +
+        return "ZndblRpcResponse{" +
                 "requestId='" + requestId + '\'' +
                 ", errorMsg='" + errorMsg + '\'' +
                 ", result=" + result +

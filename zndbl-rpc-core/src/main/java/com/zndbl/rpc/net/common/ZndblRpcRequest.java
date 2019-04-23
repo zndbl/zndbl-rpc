@@ -89,7 +89,7 @@ public class ZndblRpcRequest implements Serializable {
 
     @Override
     public String toString() {
-        return "XxlRpcRequest{" +
+        return "ZndblRpcRequest{" +
                 "requestId='" + requestId + '\'' +
                 ", createMillisTime=" + createMillisTime +
                 ", className='" + className + '\'' +
