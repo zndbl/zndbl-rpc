@@ -1,11 +1,15 @@
 package com.zndbl.rpc.net.netty;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.zndbl.rpc.net.common.ZndblRpcRequest;
 import com.zndbl.rpc.net.common.ZndblRpcResponse;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -21,6 +25,8 @@ import io.netty.channel.socket.nio.NioSocketChannel;
  * @since [产品/模块版本] （必须）
  */
 public class NettyClient implements Client {
+
+    private static final Logger LOG = LoggerFactory.getLogger(NettyClient.class);
 
     private Channel channel;
 
@@ -54,6 +60,17 @@ public class NettyClient implements Client {
 
         try {
             final ChannelFuture future = bootstrap.connect(ip, port).sync();
+            future.addListener(new ChannelFutureListener() {
+                @Override
+                public void operationComplete(ChannelFuture channelFuture) throws Exception {
+                    if (future.isSuccess()) {
+                        LOG.info("连接服务器成功");
+                    } else {
+                        LOG.info("连接服务器失败");
+                    }
+                }
+            });
+
             this.channel = future.channel();
         } catch (InterruptedException e) {
             e.printStackTrace();
