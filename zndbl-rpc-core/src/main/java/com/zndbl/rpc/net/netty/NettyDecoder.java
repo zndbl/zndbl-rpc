@@ -2,8 +2,7 @@ package com.zndbl.rpc.net.netty;
 
 import java.util.List;
 
-import com.zndbl.rpc.serializer.HessianSerializer;
-import com.zndbl.rpc.serializer.Serializer;
+import com.alibaba.fastjson.JSON;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -43,8 +42,9 @@ public class NettyDecoder extends ByteToMessageDecoder {
         byte[] data = new byte[dataLength];
         in.readBytes(data);
 
-        Serializer serializer = new HessianSerializer();
-        Object obj = serializer.deserialize(data, genericClass);
+//        Serializer serializer = new HessianSerializer();
+//        Object obj = serializer.deserialize(data, genericClass);
+        Object obj = JSON.parseObject(data, genericClass);
         out.add(obj);
     }
 }

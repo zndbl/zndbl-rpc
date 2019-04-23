@@ -31,6 +31,7 @@
         <zookeeper.version>3.4.13</zookeeper.version>
         <spring.version>4.3.22.RELEASE</spring.version>
         <spring-boot.version>1.5.19.RELEASE</spring-boot.version>
+        <fastjson.version>1.2.34</fastjson.version>
     </properties>
 
     <profiles>
