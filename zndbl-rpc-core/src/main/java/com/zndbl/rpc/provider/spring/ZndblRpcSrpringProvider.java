@@ -6,8 +6,9 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
@@ -28,7 +29,7 @@ import com.zndbl.rpc.util.ZndblRpcException;
  * @see [相关类/方法]（可选）
  * @since [产品/模块版本] （必须）
  */
-public class ZndblRpcSrpringProvider implements ApplicationContextAware, InitializingBean, DisposableBean {
+public class ZndblRpcSrpringProvider implements ApplicationContextAware, BeanPostProcessor, DisposableBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(ZndblRpcSrpringProvider.class);
 
@@ -121,14 +122,17 @@ public class ZndblRpcSrpringProvider implements ApplicationContextAware, Initial
 
 
     @Override
-    public void destroy() throws Exception {
+    public void destroy() throws Exception {}
 
+    @Override
+    public Object postProcessBeforeInitialization(Object o, String s) throws BeansException {
+        return null;
     }
 
-    // second process
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public Object postProcessAfterInitialization(Object var1, String var2) throws BeansException {
         server.start(this);
+        return null;
     }
 
     public ZndblRpcResponse invokeService(ZndblRpcRequest zndblRpcRequest) {
