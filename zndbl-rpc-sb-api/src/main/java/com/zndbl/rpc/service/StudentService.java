@@ -9,5 +9,5 @@ import com.zndbl.rpc.dto.StudentDto;
  */
 public interface StudentService {
 
-    StudentDto getStuInfo(Integer name, String age);
+    StudentDto getStuInfo(Integer age, String name);
 }

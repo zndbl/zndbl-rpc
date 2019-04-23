@@ -1,5 +1,7 @@
 package com.zndbl.rpc.registry.impl;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
 import org.apache.zookeeper.CreateMode;
@@ -70,5 +72,18 @@ public class ZkServiceRegistry implements ServiceRegistry, Watcher {
         if (event.getState() == Event.KeeperState.SyncConnected) {
             latch.countDown();
         }
+    }
+
+    @Override
+    public Set<String> discovery(String key) {
+        Set<String> set = new HashSet<>();
+        try {
+            byte[] bytes = zk.getData(key, false, null);
+            String str = new String(bytes);
+            set.add(str);
+        } catch (Exception e) {
+            LOG.error("获取zk服务", e);
+        }
+        return set;
     }
 }

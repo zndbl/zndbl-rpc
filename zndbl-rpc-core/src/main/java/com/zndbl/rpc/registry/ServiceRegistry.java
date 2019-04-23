@@ -1,5 +1,7 @@
 package com.zndbl.rpc.registry;
 
+import java.util.Set;
+
 /**
  * 〈一句话功能简述〉
  * 〈功能详细描述〉
@@ -19,4 +21,11 @@ public interface ServiceRegistry {
      * @param serviceAddress 服务地址
      */
     void registry(String applicationName, String serviceName, String serviceAddress);
+
+    /**
+     * 查询服务信息
+     * @param key
+     * @return
+     */
+    Set<String> discovery(String key);
 }
