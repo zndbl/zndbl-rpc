@@ -126,7 +126,7 @@ public class ZndblRpcSrpringProvider implements ApplicationContextAware, Disposa
     public void destroy() throws Exception {}
 
     @PostConstruct
-    public void postProcessAfterInitialization(Object var1, String var2) throws BeansException {
+    public void postProcessAfterInitialization() throws BeansException {
         server.start(this);
     }
 
