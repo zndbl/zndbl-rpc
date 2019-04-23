@@ -57,19 +57,7 @@ public class NettyServer implements Server {
             ChannelFuture future = bootstrap.bind(Integer.parseInt(port)).sync();
             future.channel().closeFuture().sync();
         } catch (Exception e) {
-
-            if (e instanceof InterruptedException) {
-                LOG.info(">>>>>>>>>>> xxl-rpc remoting server stop.");
-            } else {
-                LOG.error(">>>>>>>>>>> xxl-rpc remoting server error.", e);
-            }
-        } finally {
-            try {
-                workerGroup.shutdownGracefully();
-                bossGroup.shutdownGracefully();
-            } catch (Exception e) {
-                LOG.error(e.getMessage(), e);
-            }
+            e.printStackTrace();
         }
     }
 }
