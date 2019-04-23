@@ -4,6 +4,8 @@ import com.zndbl.rpc.net.common.ZndblRpcRequest;
 import com.zndbl.rpc.net.common.ZndblRpcResponse;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -21,8 +23,18 @@ import io.netty.channel.socket.nio.NioSocketChannel;
  */
 public class NettyClient implements Client {
 
+    private Channel channel;
+
+    public Channel getChannel() {
+        return channel;
+    }
+
+    public void setChannel(Channel channel) {
+        this.channel = channel;
+    }
+
     @Override
-    public void asyncSend(String address, ZndblRpcRequest zndblRpcRequest) {
+    public void asyncSend(String address) {
         String[] addressArray = address.split(":");
         String ip = addressArray[0];
         int port = Integer.parseInt(addressArray[1]);
@@ -41,7 +53,13 @@ public class NettyClient implements Client {
                 })
                 .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.SO_KEEPALIVE, true)
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 1000)
-                .connect(ip, port);
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 1000);
+
+        try {
+            final ChannelFuture future = bootstrap.connect(ip, port).sync();
+            this.channel = future.channel();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

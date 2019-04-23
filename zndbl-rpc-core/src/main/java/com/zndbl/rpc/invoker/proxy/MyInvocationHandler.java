@@ -17,6 +17,8 @@ import com.zndbl.rpc.registry.ServiceRegistry;
 import com.zndbl.rpc.util.MapUtil;
 import com.zndbl.rpc.util.ZndblRpcException;
 
+import io.netty.channel.Channel;
+
 /**
  * 〈一句话功能简述〉
  * 〈功能详细描述〉
@@ -72,7 +74,9 @@ public class MyInvocationHandler implements InvocationHandler {
         }
         String address = list.get(0);
 
-        client.asyncSend(address, zndblRpcRequest);
+        client.asyncSend(address);
+        Channel channel = client.getChannel();
+        channel.writeAndFlush(zndblRpcRequest);
 
         boolean hasResult = true;
         ZndblRpcResponse zndblRpcResponse = null;

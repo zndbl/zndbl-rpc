@@ -1,6 +1,6 @@
 package com.zndbl.rpc.net.netty;
 
-import com.zndbl.rpc.net.common.ZndblRpcRequest;
+import io.netty.channel.Channel;
 
 /**
  * 〈一句话功能简述〉
@@ -13,5 +13,7 @@ import com.zndbl.rpc.net.common.ZndblRpcRequest;
  */
 public interface Client {
 
-    void asyncSend(String address, ZndblRpcRequest zndblRpcRequest);
+    void asyncSend(String address);
+
+    Channel getChannel();
 }
