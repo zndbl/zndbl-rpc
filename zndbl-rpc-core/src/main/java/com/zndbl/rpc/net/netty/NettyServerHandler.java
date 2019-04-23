@@ -32,6 +32,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<ZndblRpcRequ
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ZndblRpcRequest zndblRpcRequest) throws Exception {
         try {
+            LOG.info("接收到客户端信息:" + zndblRpcRequest.toString());
             ctx.writeAndFlush(zndblRpcSrpringProvider.invokeService(zndblRpcRequest));
         } catch (Exception e) {
             ZndblRpcResponse zndblRpcResponse = new ZndblRpcResponse();

@@ -41,6 +41,8 @@ public class NettyServer implements Server {
             ServerBootstrap bootstrap = new ServerBootstrap();
             bootstrap.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
+                    .option(ChannelOption.SO_BACKLOG, 128)
+                    .childOption(ChannelOption.SO_KEEPALIVE, true)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         public void initChannel(SocketChannel channel) throws Exception {
@@ -49,9 +51,8 @@ public class NettyServer implements Server {
                                     .addLast(new NettyEncoder(ZndblRpcResponse.class))
                                     .addLast(new NettyServerHandler(zndblRpcSrpringProvider));
                         }
-                    })
-                    .childOption(ChannelOption.SO_KEEPALIVE, true)
-                    .childOption(ChannelOption.TCP_NODELAY, true);
+                    });
+
 
             ChannelFuture future = bootstrap.bind(Integer.parseInt(port)).sync();
             future.channel().closeFuture().sync();

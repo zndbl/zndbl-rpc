@@ -7,7 +7,6 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -25,6 +24,7 @@ public class NettyClient implements Client {
 
     private Channel channel;
 
+    @Override
     public Channel getChannel() {
         return channel;
     }
@@ -50,10 +50,7 @@ public class NettyClient implements Client {
                                 .addLast(new NettyDecoder(ZndblRpcResponse.class))
                                 .addLast(new NettyClientHandler());
                     }
-                })
-                .option(ChannelOption.TCP_NODELAY, true)
-                .option(ChannelOption.SO_KEEPALIVE, true)
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 1000);
+                });
 
         try {
             final ChannelFuture future = bootstrap.connect(ip, port).sync();
