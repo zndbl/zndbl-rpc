@@ -51,18 +51,20 @@ public class ZkServiceRegistry implements ServiceRegistry, Watcher {
             String registryPath = REGISTRY_PATH;
             if (zk.exists(registryPath, false) == null) {
                 zk.create(registryPath, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-                LOG.debug("create registry node:{}", registryPath);
+                LOG.info("create registry node:{}", registryPath);
             }
 
             String applicationPath = registryPath + "/" + applicationName;
             if (zk.exists(applicationPath, false) == null) {
                 zk.create(applicationPath, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-                LOG.debug("create application node:{}", applicationPath);
+                LOG.info("create application node:{}", applicationPath);
             }
 
             String servicePath = applicationPath + "/" + serviceName;
-            String serviceNode = zk.create(servicePath, serviceAddress.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
-            LOG.info("create service node:{} => {}", serviceNode, serviceAddress);
+            if (zk.exists(servicePath, false) == null) {
+                zk.create(servicePath, serviceAddress.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+                LOG.info("create servicePath node:{}", servicePath);
+            }
         } catch (Exception e) {
             LOG.error("create node failure", e);
         }

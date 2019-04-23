@@ -33,6 +33,7 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<ZndblRpcResp
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, ZndblRpcResponse zndblRpcResponse) throws Exception {
+        LOG.info("获取返回信息" + zndblRpcResponse.toString());
         MapUtil.putResponse(zndblRpcResponse.getRequestId(), zndblRpcResponse);
     }
 }
