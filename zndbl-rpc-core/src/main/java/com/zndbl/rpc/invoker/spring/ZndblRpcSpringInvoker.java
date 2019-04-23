@@ -102,9 +102,8 @@ public class ZndblRpcSpringInvoker extends InstantiationAwareBeanPostProcessorAd
 
     private Object getObject(Class iface) {
 
-        return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{iface},
+        Object object = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{iface},
                 new InvocationHandler() {
-
                     @Override
                     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
                         String className = method.getDeclaringClass().getName();
@@ -143,10 +142,12 @@ public class ZndblRpcSpringInvoker extends InstantiationAwareBeanPostProcessorAd
                         }
                         LOG.info("返回结果" + zndblRpcResponse.toString());
                         if (zndblRpcResponse.getErrorMsg() != null) {
-                            throw new ZndblRpcException(zndblRpcResponse.getErrorMsg());
+                            return null;
                         }
                         return zndblRpcResponse.getResult();
                     }
                 });
+
+        return object;
     }
 }
