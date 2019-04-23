@@ -56,14 +56,13 @@ public class MyInvocationHandler implements InvocationHandler {
         String className = method.getDeclaringClass().getName();
         String methodName = method.getName();
         Class<?>[] parameterTypes = method.getParameterTypes();
-        Object[] parameters = method.getParameters();
 
         ZndblRpcRequest zndblRpcRequest = new ZndblRpcRequest();
         zndblRpcRequest.setRequestId(UUID.randomUUID().toString());
         zndblRpcRequest.setCreateMillisTime(System.currentTimeMillis());
         zndblRpcRequest.setClassName(className);
         zndblRpcRequest.setMethodName(methodName);
-        zndblRpcRequest.setParameters(parameters);
+        zndblRpcRequest.setParameters(args);
         zndblRpcRequest.setParameterTypes(parameterTypes);
 
         String key = "/zndbl/test/" + className;
