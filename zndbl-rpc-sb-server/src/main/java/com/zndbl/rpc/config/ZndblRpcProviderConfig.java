@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import com.zndbl.rpc.net.netty.NettyServer;
 import com.zndbl.rpc.provider.spring.ZndblRpcSrpringProvider;
 import com.zndbl.rpc.registry.impl.ZkServiceRegistry;
-import com.zndbl.rpc.util.IpUtil;
 
 /**
  *
@@ -34,7 +33,7 @@ public class ZndblRpcProviderConfig {
     public ZndblRpcSrpringProvider zndblRpcSpringProviderFactory() {
         ZndblRpcSrpringProvider zndblRpcSrpringProvider = new ZndblRpcSrpringProvider();
         zndblRpcSrpringProvider.setRegistryAddress(registryAddress);
-        String ip = IpUtil.getIp();
+        String ip = "127.0.0.1";
         zndblRpcSrpringProvider.setServiceAddress(ip + ':' + port);
         zndblRpcSrpringProvider.setApplicationName(applicationName);
         zndblRpcSrpringProvider.setServiceRegistryClass(ZkServiceRegistry.class);
