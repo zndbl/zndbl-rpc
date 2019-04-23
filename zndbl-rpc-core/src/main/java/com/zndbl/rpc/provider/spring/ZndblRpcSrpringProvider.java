@@ -3,12 +3,10 @@ package com.zndbl.rpc.provider.spring;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -121,12 +119,14 @@ public class ZndblRpcSrpringProvider implements ApplicationContextAware, Disposa
         }
     }
 
-
     @Override
     public void destroy() throws Exception {}
 
     @PostConstruct
-    public void postProcessAfterInitialization() throws BeansException {
+    public void postProcessAfterInitialization() throws Exception {
+        if (server == null) {
+            server = serverClass.newInstance();
+        }
         server.start(this);
     }
 
