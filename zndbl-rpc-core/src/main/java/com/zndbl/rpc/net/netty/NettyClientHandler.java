@@ -32,6 +32,11 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<ZndblRpcResp
     }
 
     @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        super.channelActive(ctx);
+    }
+
+    @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, ZndblRpcResponse zndblRpcResponse) throws Exception {
         LOG.info("获取服务端返回信息" + zndblRpcResponse.toString());
         MapUtil.putResponse(zndblRpcResponse.getRequestId(), zndblRpcResponse);
