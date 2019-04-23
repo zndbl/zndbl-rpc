@@ -1,6 +1,6 @@
 package com.zndbl.rpc.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zndbl.rpc.dto.StudentDto;
@@ -22,8 +22,10 @@ public class StudentController {
     @ZndblRpcRefrence
     private StudentService studentService;
 
-    @RequestMapping()
-    public StudentDto http(String name, Integer age) {
+    @GetMapping("/test")
+    public StudentDto http() {
+        String name = "zndbl";
+        Integer age = 12;
         return studentService.getStuInfo(age, name);
     }
 }
