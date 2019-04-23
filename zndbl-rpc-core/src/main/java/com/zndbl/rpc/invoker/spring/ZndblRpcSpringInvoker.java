@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessorAdapter;
@@ -32,6 +34,8 @@ import com.zndbl.rpc.util.ZndblRpcException;
  * @since [产品/模块版本] （必须）
  */
 public class ZndblRpcSpringInvoker extends InstantiationAwareBeanPostProcessorAdapter implements InitializingBean {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ZndblRpcSpringInvoker.class);
 
     private Class<? extends ServiceRegistry> serviceRegistryClass;
 
@@ -137,6 +141,7 @@ public class ZndblRpcSpringInvoker extends InstantiationAwareBeanPostProcessorAd
                                 hasResult = false;
                             }
                         }
+                        LOG.info("返回结果" + zndblRpcResponse.toString());
                         if (zndblRpcResponse.getErrorMsg() != null) {
                             throw new ZndblRpcException(zndblRpcResponse.getErrorMsg());
                         }
