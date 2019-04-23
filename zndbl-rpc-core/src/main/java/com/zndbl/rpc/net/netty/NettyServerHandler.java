@@ -8,7 +8,7 @@ import com.zndbl.rpc.net.common.ZndblRpcResponse;
 import com.zndbl.rpc.provider.spring.ZndblRpcSrpringProvider;
 
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 
 /**
  * 〈一句话功能简述〉
@@ -19,7 +19,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
  * @see [相关类/方法]（可选）
  * @since [产品/模块版本] （必须）
  */
-public class NettyServerHandler extends SimpleChannelInboundHandler<ZndblRpcRequest> {
+public class NettyServerHandler extends ChannelInboundHandlerAdapter {
 
     private static final Logger LOG = LoggerFactory.getLogger(NettyServerHandler.class);
 
@@ -30,7 +30,8 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<ZndblRpcRequ
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, ZndblRpcRequest zndblRpcRequest) throws Exception {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        ZndblRpcRequest zndblRpcRequest = (ZndblRpcRequest) msg;
         try {
             LOG.info("接收到客户端信息:" + zndblRpcRequest.toString());
             ctx.writeAndFlush(zndblRpcSrpringProvider.invokeService(zndblRpcRequest));

@@ -67,6 +67,8 @@ public class NettyClient implements Client {
                         LOG.info("连接服务器成功");
                     } else {
                         LOG.info("连接服务器失败");
+                        future.cause().printStackTrace();
+                        group.shutdownGracefully();
                     }
                 }
             });

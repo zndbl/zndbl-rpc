@@ -55,6 +55,16 @@ public class NettyServer implements Server {
 
 
             ChannelFuture future = bootstrap.bind(Integer.parseInt(port)).sync();
+
+            if (future.isSuccess()) {
+                System.out.println("服务器启动成功");
+            } else {
+                System.out.println("服务端启动失败");
+                future.cause().printStackTrace();
+                bossGroup.shutdownGracefully();
+                workerGroup.shutdownGracefully();
+            }
+
             future.channel().closeFuture().sync();
         } catch (Exception e) {
             e.printStackTrace();
