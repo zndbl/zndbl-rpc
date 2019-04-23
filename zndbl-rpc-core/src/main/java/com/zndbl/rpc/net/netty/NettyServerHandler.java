@@ -1,7 +1,5 @@
 package com.zndbl.rpc.net.netty;
 
-import java.util.concurrent.ThreadPoolExecutor;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,23 +23,16 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<ZndblRpcRequ
 
     private static final Logger LOG = LoggerFactory.getLogger(NettyServerHandler.class);
 
-    private ThreadPoolExecutor threadPoolExecutor;
     private ZndblRpcSrpringProvider zndblRpcSrpringProvider;
 
-    public NettyServerHandler(final ThreadPoolExecutor threadPoolExecutor, ZndblRpcSrpringProvider zndblRpcSrpringProvider) {
-        this.threadPoolExecutor = threadPoolExecutor;
+    public NettyServerHandler(ZndblRpcSrpringProvider zndblRpcSrpringProvider) {
         this.zndblRpcSrpringProvider = zndblRpcSrpringProvider;
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ZndblRpcRequest zndblRpcRequest) throws Exception {
         try {
-            threadPoolExecutor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    ctx.writeAndFlush(zndblRpcSrpringProvider.invokeService(zndblRpcRequest));
-                }
-            });
+            ctx.writeAndFlush(zndblRpcSrpringProvider.invokeService(zndblRpcRequest));
         } catch (Exception e) {
             ZndblRpcResponse zndblRpcResponse = new ZndblRpcResponse();
             zndblRpcResponse.setRequestId(zndblRpcRequest.getRequestId());
