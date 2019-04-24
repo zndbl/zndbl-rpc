@@ -1,5 +1,7 @@
 package com.zndbl.rpc.net.common;
 
+import java.io.Serializable;
+
 /**
  * 〈一句话功能简述〉
  * 〈功能详细描述〉
@@ -9,7 +11,9 @@ package com.zndbl.rpc.net.common;
  * @see [相关类/方法]（可选）
  * @since [产品/模块版本] （必须）
  */
-public class ZndblRpcResponse {
+public class ZndblRpcResponse implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String requestId;
     private String errorMsg;
