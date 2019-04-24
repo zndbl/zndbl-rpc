@@ -19,7 +19,7 @@ import com.zndbl.rpc.service.StudentService;
 @RestController
 public class StudentController {
 
-    @ZndblRpcRefrence
+    @ZndblRpcRefrence(group = "test")
     private StudentService studentService;
 
     @GetMapping("/test")

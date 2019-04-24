@@ -20,4 +20,6 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface ZndblRpcRefrence {
 
+    String group() default "";
+
 }

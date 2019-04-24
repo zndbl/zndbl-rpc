@@ -82,11 +82,13 @@ public class ZndblRpcSpringInvoker extends InstantiationAwareBeanPostProcessorAd
             @Override
             public void doWith(Field field) throws IllegalAccessException {
                 if (field.isAnnotationPresent(ZndblRpcRefrence.class)) {
+                    ZndblRpcRefrence annotation = field.getAnnotation(ZndblRpcRefrence.class);
+                    String group = annotation.group();
                     Class iface = field.getType();
                     if (!iface.isInterface()) {
                         throw new ZndblRpcException("zndbl-rpc, reference(ZndblRpcRefrence) must be interface.");
                     }
-                    Object serviceProxy = getObject(iface);
+                    Object serviceProxy = getObject(iface, group);
                     field.setAccessible(true);
                     field.set(bean, serviceProxy);
                 }
@@ -96,10 +98,11 @@ public class ZndblRpcSpringInvoker extends InstantiationAwareBeanPostProcessorAd
         return super.postProcessAfterInstantiation(bean, beanName);
     }
 
-    private Object getObject(Class iface) {
+    private Object getObject(Class iface, String group) {
         MyInvocationHandler invocationHandler = new MyInvocationHandler();
         invocationHandler.setServiceRegistry(serviceRegistry);
         invocationHandler.setClient(client);
+        invocationHandler.setGroup(group);
 
         Object object = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
                 new Class[]{iface}, invocationHandler);

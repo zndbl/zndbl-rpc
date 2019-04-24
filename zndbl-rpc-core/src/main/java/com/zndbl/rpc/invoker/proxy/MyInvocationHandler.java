@@ -34,6 +34,7 @@ public class MyInvocationHandler implements InvocationHandler {
 
     private ServiceRegistry serviceRegistry;
     private Client client;
+    private String group;
 
     public ServiceRegistry getServiceRegistry() {
         return serviceRegistry;
@@ -51,6 +52,14 @@ public class MyInvocationHandler implements InvocationHandler {
         this.client = nettyClient;
     }
 
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         String className = method.getDeclaringClass().getName();
@@ -65,7 +74,7 @@ public class MyInvocationHandler implements InvocationHandler {
         zndblRpcRequest.setParameters(args);
         zndblRpcRequest.setParameterTypes(parameterTypes);
 
-        String key = "/zndbl/test/" + className;
+        String key = "/zndbl/" + group + "/" + className;
         Set<String> set = serviceRegistry.discovery(key);
         List<String> list = new ArrayList<>(set);
         if (list.size() == 0) {
