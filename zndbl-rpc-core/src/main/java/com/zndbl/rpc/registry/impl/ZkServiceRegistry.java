@@ -85,7 +85,8 @@ public class ZkServiceRegistry implements ServiceRegistry, Watcher {
             String str = new String(bytes);
             set.add(str);
         } catch (Exception e) {
-            LOG.error("获取zk服务", e);
+            ZooKeeper.States state = zk.getState();
+            LOG.error("获取zk服务异常 {}", e);
         }
         return set;
     }
