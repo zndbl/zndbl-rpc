@@ -1,6 +1,7 @@
 package com.zndbl.rpc.net.netty;
 
 import com.alibaba.fastjson.JSON;
+import com.zndbl.rpc.net.common.ZndblRpcResponse;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -29,7 +30,8 @@ public class NettyEncoder extends MessageToByteEncoder<Object> {
         if (genericClass.isInstance(in)) {
 //            Serializer serializer = new HessianSerializer();
 //            byte[] data = serializer.serialize(in);
-            byte[] data = JSON.toJSONBytes(in);
+            ZndblRpcResponse zndblRpcResponse = (ZndblRpcResponse) in;
+            byte[] data = JSON.toJSONBytes(zndblRpcResponse);
             out.writeInt(data.length);
             out.writeBytes(data);
         }
